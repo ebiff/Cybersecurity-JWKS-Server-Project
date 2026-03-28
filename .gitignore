@@ -1,0 +1,5 @@
+.coverage
+totally_not_my_privateKeys.db
+gradebot.exe
+__pycache__/
+*.pyc

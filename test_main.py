@@ -6,7 +6,6 @@ import requests
 import jwt
 from main import MyServer, HOST_NAME, SERVER_PORT
 
-
 @pytest.fixture(scope="module")
 def server():
     """Start the server in a separate thread"""
