@@ -39,23 +39,20 @@ pem = private_key.private_bytes(
     format=serialization.PrivateFormat.TraditionalOpenSSL,
     encryption_algorithm=serialization.NoEncryption()
 )
-pem2 = private_key2.private_bytes(
-    encoding=serialization.Encoding.PEM,
-    format=serialization.PrivateFormat.TraditionalOpenSSL,
-    encryption_algorithm=serialization.NoEncryption()
-)
 expired_pem = expired_key.private_bytes(
     encoding=serialization.Encoding.PEM,
     format=serialization.PrivateFormat.TraditionalOpenSSL,
     encryption_algorithm=serialization.NoEncryption()
 )
 
+#(Question!!) Is this how I set the expiration time? or is it on the actual private key? Or, is it just a boolean of if it is the testing expired key?
 #store keys in database with expiration times
 cur.execute("INSERT INTO keys (key, exp) VALUES (?, ?)", (pem, int(datetime.datetime.now().timestamp()) + 3600))  # valid for 1 hour
-cur.execute("INSERT INTO keys (key, exp) VALUES (?, ?)", (pem2, int(datetime.datetime.now().timestamp()) + 3600))  # valid for 1 hour
 cur.execute("INSERT INTO keys (key, exp) VALUES (?, ?)", (expired_pem, int(datetime.datetime.now().timestamp())))  # expires now
 con.commit()
 
+#sample numbers for testing without database
+#numbers = private_key.private_numbers()
 
 
 def int_to_base64(value):
@@ -102,11 +99,11 @@ class MyServer(BaseHTTPRequestHandler):
                 headers["kid"] = "expiredKID"
                 token_payload["exp"] = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=1)
                 #get expired key from database
-                cur.execute("SELECT key FROM keys WHERE exp <= ? LIMIT 1", (int(datetime.datetime.now().timestamp()),))
+                cur.execute("SELECT key FROM keys WHERE exp <= ?", (int(datetime.datetime.now().timestamp()),))
                 pem = cur.fetchone()[0]
             else: 
                 #get valid key from database and encode jwt
-                cur.execute("SELECT key FROM keys WHERE exp > ? LIMIT 1", (int(datetime.datetime.now().timestamp()),))
+                cur.execute("SELECT key FROM keys WHERE exp > ?", (int(datetime.datetime.now().timestamp()),))
                 pem = cur.fetchone()[0]
             encoded_jwt = jwt.encode(token_payload, pem, algorithm="RS256", headers=headers)
             self.send_response(200)
@@ -123,15 +120,22 @@ class MyServer(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.end_headers()
-
-            keys = {
-                "keys": []
-            }
-
-            #fetch all valid keys from database
-            cur.execute("SELECT key FROM keys WHERE exp > ?", (int(datetime.datetime.now().timestamp()),))
+            cur.execute("SELECT key FROM keys WHERE exp > ? LIMIT 1", (int(datetime.datetime.now().timestamp()),))
             pem_keys = cur.fetchall()
-            #convert PEM keys to JWKS format and add to keys list
+            keys = {
+                "keys": [
+                    #sample key for testing without database
+                    # {
+                    # "kty": "RSA",
+                    # "use": "sig",
+                    # "kid": "goodKID",
+                    # "alg": "RS256",
+                    # "n": int_to_base64(numbers.public_numbers.n),
+                    # "e": int_to_base64(numbers.public_numbers.e)
+                    # }
+                ]
+            }
+            #convert PEM keys to JWKS format
             for pem in pem_keys:
                 #decode pem from database
                 private_key = serialization.load_pem_private_key(pem[0], password=None)
@@ -149,7 +153,6 @@ class MyServer(BaseHTTPRequestHandler):
                 #add key data to keys list
                 keys["keys"].append(key_data)
 
-            #send keys as json response
             self.wfile.write(bytes(json.dumps(keys), "utf-8"))
             return
 
@@ -163,5 +166,5 @@ if __name__ == "__main__":
         web_server.serve_forever()
     except KeyboardInterrupt:
         pass
-    con.close()
+
     web_server.server_close()
