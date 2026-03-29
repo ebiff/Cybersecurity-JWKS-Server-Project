@@ -26,6 +26,7 @@ The JWKS server in main.py generates a private key and an expired key for testin
 
 ### Code Coverage
 The code coverage of the test suite was obtained by running the JWKS server using the "coverage run main.py" command to start tracking the coverage of the server. Then in another terminal, the test suite was run using the "pytest test_main.py" command. Then the JWKS server is closed and the coverage report is displayed using the "coverage report -m" command. As seen in the photo below, the coverage of the test suite is 100%, and all of the test cases passed.
-<img width="1572" height="689" alt="image" src="https://github.com/user-attachments/assets/edab1306-8339-47da-9221-2561a2a1790a" />
+<img width="1364" height="763" alt="image" src="https://github.com/user-attachments/assets/45d98b8c-7eba-4f61-9523-692e400c901a" />
+
 
 ### Blackbox testing (gradebot.exe)
