@@ -30,6 +30,6 @@ The code coverage of the test suite was obtained by running the JWKS server usin
 
 
 ### Blackbox testing (gradebot.exe)
-For the blackbox testing, the gradebot.exe test client, found <link src=https://github.com/jh125486/CSCE3550/releases>here</link>, is moved into the project folder and is executed using the "./gradebot.exe project-2 --run="py main.py"" command.
+For the blackbox testing, the gradebot.exe test client, found [Link Text]([https://github.com/jh125486/CSCE3550/releases] "here"), is moved into the project folder and is executed using the "./gradebot.exe project-2 --run="py main.py"" command.
 <img width="1349" height="848" alt="image" src="https://github.com/user-attachments/assets/ae0c7f6c-5389-45ab-ac26-b529c2547178" />
 
