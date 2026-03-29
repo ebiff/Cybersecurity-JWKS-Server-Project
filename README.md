@@ -4,7 +4,7 @@ Author: Elisabeth Nguyen (Base files for Project 1 by Dr. Hochstetler)
 
 eUID: ehn0018
 
-Last Updated: 3/28/2026
+Last Updated: 3/29/2026
 
 ## Project 2 - Extending the JWKS Server with a SQLite Database
 
