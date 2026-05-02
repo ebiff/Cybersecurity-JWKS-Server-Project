@@ -17,8 +17,9 @@ The purpose of Project 3 is to bulk up the security of the JWKS server by adding
 
 For running with test_main.py testcases:
 1. install dependencies with pip (or chosen package manager) - "pip install -r requirements.txt"
-2. run server using py or python command - "py main.py" or "python main.py"
-3. run test suite with pytest - "pytest test_main.py"
+2. Set NOT_MY_KEY environment variable to a 32 byte string - e.g. "export NOT_MY_KEY="1nNiBs4u82Jt2GkRc6wBbgwMdKri1Idt" "
+3. run server using py or python command - "py main.py" or "python main.py"
+4. run test suite with pytest - "pytest test_main.py"
 
 For running with gradebot:
 
